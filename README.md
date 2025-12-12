@@ -49,8 +49,9 @@ Link video demo: [https://drive.google.com/file/d/1G7Ia7MZJC-OvzuTcPERwXyON5V-vp
 
 ### **Giao diện trang chủ**
 
-<img width="647" height="1342" alt="image" src="https://github.com/user-attachments/assets/b05de994-f483-4400-ac6c-1f4f97078141" />
-<img width="617" height="1333" alt="image" src="https://github.com/user-attachments/assets/110f413a-6af7-4ca7-bd51-bb72374e11ac" />
+<img width="407" height="852" alt="image" src="https://github.com/user-attachments/assets/161e7fac-5ace-4512-8346-8e7d2b08b856" />
+<img width="395" height="848" alt="image" src="https://github.com/user-attachments/assets/029bfebe-5f7a-4f9e-8fd2-8f09ddb17b7b" />
+
 
 **Mô tả:**
 Giao diện có nền gradient xanh dịu mắt. Các thành phần được bo tròn mềm mại. Phần hiển thị nhiệt độ được đặt nổi bật ở vị trí trung tâm, bên dưới là dự báo theo giờ và các chỉ số chi tiết. Tổng thể gọn gàng và hiện đại.
