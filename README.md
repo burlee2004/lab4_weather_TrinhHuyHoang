@@ -1,7 +1,7 @@
 **Weather Forecast App – Flutter**
 **Trịnh Huy Hoàng – 2224802010159**
 
-Link video demo: [[https://drive.google.com/file/d/1G7Ia7MZJC-OvzuTcPERwXyON5V-vpdAf/view?usp=sharing](https://drive.google.com/file/d/1G7Ia7MZJC-OvzuTcPERwXyON5V-vpdAf/view?usp=sharing)](https://drive.google.com/file/d/112afCnesHNEHtUdJZEMwDTAJm624PnMz/view?usp=sharing)
+Link video demo: https://drive.google.com/file/d/112afCnesHNEHtUdJZEMwDTAJm624PnMz/view?usp=sharing
 
 Ứng dụng Weather Forecast App được phát triển bằng Flutter và sử dụng OpenWeatherMap API để lấy dữ liệu thời tiết theo thời gian thực. Giao diện được thiết kế theo phong cách **Glassmorphism** trên nền **Gradient**, tạo cảm giác hiện đại và dễ theo dõi.
 
