@@ -4,6 +4,7 @@ import 'dart:ui'; // Import để dùng ImageFilter cho hiệu ứng mờ kính
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+// import 'package:intl/date_symbol_data_local.dart';
 
 // Import Constants
 import '../utils/constants.dart';
@@ -41,61 +42,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // --- PHẦN CHỈNH SỬA MÀU SẮC NGHỆ THUẬT (MOOD) ---
   LinearGradient _getBackgroundGradient(String? condition) {
-  // Lấy cài đặt hiện tại
-  final settings = context.watch<SettingsProvider>();
+    // Lấy cài đặt hiện tại
+    final settings = context.watch<SettingsProvider>();
 
-  // ƯU TIÊN 1: Nếu User bật Dark Theme -> Trả về màu tối luôn
-  if (settings.isDarkTheme) {
-    return const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF232526), Color(0xFF414345)], // Màu xám đen nghệ thuật
-    );
-  }
-
-  // ƯU TIÊN 2: Nếu không bật Dark Theme -> Trả về màu theo thời tiết (Code cũ)
-  if (condition == null) {
-    return const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF8EC5FC), Color(0xFFE0C3FC)],
-    );
-  }
-
-  switch (condition.toLowerCase()) {
-    case 'clear':
-      return const LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [Color(0xFFFFAB00), Color(0xFF4FA8F6), Color(0xFF00CDAC)],
-        stops: [0.0, 0.5, 1.0],
-      );
-    // ... (Giữ nguyên các case còn lại như code tôi gửi lần trước) ...
-    case 'rain':
-    case 'drizzle':
-    case 'thunderstorm':
+    // ƯU TIÊN 1: Nếu User bật Dark Theme -> Trả về màu tối luôn
+    if (settings.isDarkTheme) {
       return const LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Color(0xFF232526), Color(0xFF414345)],
+        colors: [
+          Color(0xFF232526),
+          Color(0xFF414345),
+        ], // Màu xám đen nghệ thuật
       );
-    // ...
-    default:
-      int hour = DateTime.now().hour;
-      if (hour < 6 || hour > 18) {
+    }
+
+    // ƯU TIÊN 2: Nếu không bật Dark Theme
+    if (condition == null) {
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF8EC5FC), Color(0xFFE0C3FC)],
+      );
+    }
+
+    switch (condition.toLowerCase()) {
+      case 'clear':
+        return const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFFFFAB00), Color(0xFF4FA8F6), Color(0xFF00CDAC)],
+          stops: [0.0, 0.5, 1.0],
+        );
+      case 'rain':
+      case 'drizzle':
+      case 'thunderstorm':
         return const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF141E30), Color(0xFF243B55)],
+          colors: [Color(0xFF232526), Color(0xFF414345)],
         );
-      }
-      return const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Color(0xFF2BC0E4), Color(0xFFEAECC6)],
-      );
+      default:
+        int hour = DateTime.now().hour;
+        if (hour < 6 || hour > 18) {
+          return const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF141E30), Color(0xFF243B55)],
+          );
+        }
+        return const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF2BC0E4), Color(0xFFEAECC6)],
+        );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
           extendBodyBehindAppBar: true, // Để nền tràn lên cả status bar
           body: Container(
             decoration: BoxDecoration(
-              gradient: _getBackgroundGradient(provider.currentWeather?.mainCondition),
+              gradient: _getBackgroundGradient(
+                provider.currentWeather?.mainCondition,
+              ),
             ),
             child: Stack(
               children: [
                 // --- BACKGROUND BLOBS (HIỆU ỨNG TRANG TRÍ) ---
-                // Hình tròn mờ 1 (Góc trên trái)
                 Positioned(
                   top: -60,
                   left: -60,
@@ -127,7 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                // Hình tròn mờ 2 (Góc dưới phải)
                 Positioned(
                   bottom: -80,
                   right: -20,
@@ -144,14 +146,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                // ---------------------------------------------
 
+                // ---------------------------------------------
                 SafeArea(
                   child: Column(
                     children: [
                       // --- CUSTOM APP BAR ---
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -159,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  DateFormat('EEEE, d MMMM').format(DateTime.now()), // Hiện ngày tháng
+                                  DateFormat(
+                                    'EEEE, d MMMM',
+                                  ).format(DateTime.now()),
                                   style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 14,
@@ -167,12 +174,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 const Text(
-                                  'Weather Forecast',
+                                  'SkyCast Mobile',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
-                                    shadows: [Shadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 4)],
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black26,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -182,13 +195,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
                               ),
                               child: IconButton(
-                                icon: const Icon(Icons.settings, color: Colors.white),
+                                icon: const Icon(
+                                  Icons.settings,
+                                  color: Colors.white,
+                                ),
                                 onPressed: () => Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                  MaterialPageRoute(
+                                    builder: (_) => const SettingsScreen(),
+                                  ),
                                 ),
                               ),
                             ),
@@ -215,12 +235,14 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.white.withOpacity(0.9),
             elevation: 10,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const SearchScreen()),
             ),
-            child: ShaderMask( // Làm icon có màu gradient cho đẹp
+            child: ShaderMask(
               shaderCallback: (Rect bounds) {
                 return const LinearGradient(
                   colors: [Colors.blue, Colors.purple],
@@ -239,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String windValue;
     String windUnit;
 
-    // Logic tính toán gió (Giữ nguyên)
+    // Logic tính toán gió
     if (settings.isMsSpeed) {
       windValue = "${provider.currentWeather!.windSpeed}";
       windUnit = "m/s";
@@ -268,38 +290,38 @@ class _HomeScreenState extends State<HomeScreen> {
     if (provider.currentWeather == null) {
       return const Center(
         child: Text(
-          'No weather data',
+          'over loading data',
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       );
     }
 
-    // --- GIAO DIỆN CHÍNH ---
+    // --- GIAO DIỆN CHÍNH (BỐ CỤC ĐÃ SỬA) ---
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Thẻ thời tiết chính (Current Weather)
+          // 1. Thẻ thời tiết chính (Current Weather) - GIỮ NGUYÊN VỊ TRÍ
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: CurrentWeatherCard(weather: provider.currentWeather!),
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 25),
 
           // 2. Dự báo hàng giờ (Hourly) - Style Glassmorphism
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ClipRRect( // ClipRRect để bo tròn khung kính
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Hiệu ứng mờ nền sau
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1), // Màu trắng trong suốt
+                    color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(25),
                     border: Border.all(color: Colors.white.withOpacity(0.2)),
                   ),
@@ -310,10 +332,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: const [
-                            Icon(Icons.watch_later_outlined, color: Colors.white70, size: 20),
+                            Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.white70,
+                              size: 20,
+                            ),
                             SizedBox(width: 8),
                             Text(
-                              "Hourly Forecast",
+                              "TimeFlow Forecast",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -333,49 +359,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 25),
 
-          // 3. Tiêu đề "Next 5 Days"
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Next 5 Days",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    shadows: [Shadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 4)],
-                  ),
-                ),
-                InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ForecastScreen()),
-                  ),
-                  child: Row(
-                    children: const [
-                      Text("See All", style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600)),
-                      Icon(Icons.chevron_right, color: Colors.white70),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Card dự báo ngày mai
-          if (provider.forecast.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: DailyForecastCard(forecast: provider.forecast.first),
-            ),
-
-          const SizedBox(height: 20),
-
-          // 4. Lưới chi tiết (Details Grid) - Thiết kế nghệ thuật
+          // 3. Lưới chi tiết (Details Grid) - ĐƯA LÊN TRÊN DỰ BÁO NGÀY
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -384,12 +370,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Padding(
                   padding: EdgeInsets.only(left: 5, bottom: 15),
                   child: Text(
-                    "Highlights",
+                    "Outstanding",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      shadows: [Shadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 4)],
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -405,37 +397,102 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.water_drop_outlined,
                       title: "Humidity",
                       value: "${provider.currentWeather!.humidity}%",
-                      gradientColors: [Colors.blueAccent.withOpacity(0.4), Colors.lightBlue.withOpacity(0.1)],
+                      gradientColors: [
+                        Colors.blueAccent.withOpacity(0.4),
+                        Colors.lightBlue.withOpacity(0.1),
+                      ],
                     ),
                     _buildArtisticDetailItem(
                       icon: Icons.air,
                       title: "Wind",
                       value: "$windValue $windUnit",
-                      gradientColors: [Colors.green.withOpacity(0.4), Colors.teal.withOpacity(0.1)],
+                      gradientColors: [
+                        Colors.green.withOpacity(0.4),
+                        Colors.teal.withOpacity(0.1),
+                      ],
                     ),
                     _buildArtisticDetailItem(
                       icon: Icons.speed,
                       title: "Pressure",
                       value: "${provider.currentWeather!.pressure} hPa",
-                      gradientColors: [Colors.orange.withOpacity(0.4), Colors.deepOrange.withOpacity(0.1)],
+                      gradientColors: [
+                        Colors.orange.withOpacity(0.4),
+                        Colors.deepOrange.withOpacity(0.1),
+                      ],
                     ),
                     _buildArtisticDetailItem(
                       icon: Icons.visibility_outlined,
                       title: "Visibility",
-                      value: "${(provider.currentWeather!.visibility ?? 0) / 1000} km",
-                      gradientColors: [Colors.purple.withOpacity(0.4), Colors.deepPurple.withOpacity(0.1)],
+                      value:
+                          "${(provider.currentWeather!.visibility ?? 0) / 1000} km",
+                      gradientColors: [
+                        Colors.purple.withOpacity(0.4),
+                        Colors.deepPurple.withOpacity(0.1),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
+
+          const SizedBox(height: 30),
+
+          // 4. Dự báo 5 ngày (Next 5 Days) - ĐƯA XUỐNG CUỐI
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "5-Day Outlook",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ForecastScreen()),
+                  ),
+                  child: Row(
+                    children: const [
+                      Text(
+                        "Detail",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: Colors.white70),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Card dự báo ngày mai (rút gọn)
+          if (provider.forecast.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: DailyForecastCard(forecast: provider.forecast.first),
+            ),
         ],
       ),
     );
   }
 
-  // Widget con mới: Thẻ chi tiết với màu Gradient riêng biệt cho từng ô
+  // Widget con: Thẻ chi tiết với màu Gradient
   Widget _buildArtisticDetailItem({
     required IconData icon,
     required String title,
@@ -487,7 +544,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
